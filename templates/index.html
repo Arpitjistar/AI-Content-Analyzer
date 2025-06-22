@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Content Analyzer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f1f5f9;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 40px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1f2937;
+            margin-bottom: 30px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 15px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            resize: vertical;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #2563eb;
+            color: white;
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .result {
+            margin-top: 30px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 25px;
+        }
+
+        h2, h3 {
+            color: #0f172a;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .result {
+    margin-top: 30px;
+    background: #f1f5f9;
+    border-left: 5px solid #2563eb;
+    border-radius: 10px;
+    padding: 25px 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.result h2, .result h3 {
+    color: #0f172a;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.result h2::before {
+    content: "📊";
+}
+.result h3::before {
+    content: "✅";
+}
+
+.result p, .result ul {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #334155;
+    margin: 10px 0;
+}
+
+.result ul {
+    padding-left: 20px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Content Analyzer</h1>
+        <form method="POST" action="/analyze">
+            <textarea name="content" placeholder="Paste your HTML or content here...">{{ request.form.content }}</textarea>
+            <button type="submit">Analyze</button>
+        </form>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        {% if score is defined %}
+        <div class="result">
+            <div class="section">
+                <h2>Summary Score:</h2>
+                <p><strong>{{ score }}/100</strong></p>
+            </div>
+
+            <div class="section">
+                <h3>Summary Candidate:</h3>
+                <p>{{ summary }}</p>
+            </div>
+
+            <div class="section">
+                <h3>Suggestions:</h3>
+                <ul>
+                    {% for s in suggestions %}
+                        <li>{{ s }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="section">
+                <h3>Entities:</h3>
+                <p>{{ entities }}</p>
+
+                <h3>Entity Types:</h3>
+                <p>{{ types }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
